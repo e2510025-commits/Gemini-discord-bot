@@ -1,0 +1,42 @@
+// Prisma schema for dashboard read-queries. For development use SQLite; for production use PostgreSQL.
+// Run: npx prisma generate && npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model GuildConfig {
+  id      Int     @id @default(autoincrement())
+  guildId BigInt  @unique
+  prefix  String  @default("/")
+  mode    String  @default("standard")
+  reactionChannels String? // JSON string of channel ids
+}
+
+model ChatLog {
+  id         Int      @id @default(autoincrement())
+  guildId    BigInt?
+  channelId  BigInt?
+  channelName String?
+  userId     BigInt
+  userName   String?
+  userAvatar String?
+  userMessage String
+  botResponse String?
+  tokens     Float    @default(0)
+  latencyMs  Float    @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Stats {
+  id           Int     @id @default(autoincrement())
+  guildId      BigInt?
+  totalMessages Int    @default(0)
+  uniqueUsers   Int    @default(0)
+  updatedAt     DateTime @default(now())
+}
